@@ -1,0 +1,12 @@
+// Recent Azure Activity Log events
+AzureActivity
+| where TimeGenerated > ago(1h)
+| project TimeGenerated, OperationNameValue, ActivityStatusValue, ResourceGroup, Caller
+| sort by TimeGenerated desc
+
+// Diagnostic Settings write operations
+AzureActivity
+| where TimeGenerated > ago(24h)
+| where OperationNameValue =~ "MICROSOFT.INSIGHTS/DIAGNOSTICSETTINGS/WRITE"
+| project TimeGenerated, OperationNameValue, ActivityStatusValue, ResourceGroup, Caller
+| sort by TimeGenerated desc

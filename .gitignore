@@ -1,0 +1,14 @@
+# Local/editor files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Azure CLI local state
+.azure/
+
+# Terraform (reserved for a future IaC version)
+.terraform/
+*.tfstate
+*.tfstate.*
+.terraform.lock.hcl

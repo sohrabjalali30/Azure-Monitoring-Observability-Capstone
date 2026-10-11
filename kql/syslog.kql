@@ -1,0 +1,19 @@
+// Recent Syslog records
+Syslog
+| where TimeGenerated > ago(1h)
+| project TimeGenerated, Computer, Facility, SeverityLevel, ProcessName, SyslogMessage
+| sort by TimeGenerated desc
+
+// STC Tech monitoring validation events
+Syslog
+| where TimeGenerated > ago(24h)
+| where SyslogMessage contains "STC-TECH-MONITORING"
+| project TimeGenerated, Computer, Facility, SeverityLevel, SyslogMessage
+| sort by TimeGenerated desc
+
+// Warning and higher-severity Syslog records
+Syslog
+| where TimeGenerated > ago(1h)
+| where SeverityLevel in ("warning", "error", "critical", "alert", "emergency")
+| project TimeGenerated, Computer, Facility, SeverityLevel, ProcessName, SyslogMessage
+| sort by TimeGenerated desc

@@ -1,0 +1,33 @@
+// Discover collected performance counters
+Perf
+| where TimeGenerated > ago(1h)
+| summarize Records=count() by ObjectName, CounterName
+| sort by ObjectName asc, CounterName asc
+
+// Recent processor samples
+Perf
+| where TimeGenerated > ago(1h)
+| where ObjectName == "Processor"
+| where CounterName == "% Processor Time"
+| project TimeGenerated, Computer, InstanceName, CPU=round(CounterValue, 2)
+| sort by TimeGenerated desc
+
+// CPU baseline by processor instance
+Perf
+| where TimeGenerated > ago(1h)
+| where ObjectName == "Processor"
+| where CounterName == "% Processor Time"
+| summarize
+    Samples=count(),
+    AvgCPU=round(avg(CounterValue), 2),
+    MinCPU=round(min(CounterValue), 2),
+    MaxCPU=round(max(CounterValue), 2)
+    by InstanceName
+| sort by InstanceName asc
+
+// Check latest performance record
+Perf
+| where ObjectName == "Processor"
+| where CounterName == "% Processor Time"
+| summarize LastPerfRecord=max(TimeGenerated), Records=count() by InstanceName
+| sort by InstanceName asc
